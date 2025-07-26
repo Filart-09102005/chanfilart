@@ -1,0 +1,1317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hans Filart Portfolio</title>
+  <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <style>
+    /* Global Styles */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      font-family: sans-serif;
+      color: #fff;
+      overflow: hidden;
+      position: relative;
+      background: #0a0a1a;
+      opacity: 0;
+      animation: fadeInBackground 2s forwards;
+    }
+    
+    @keyframes fadeInBackground { 
+      0% { opacity: 0; } 
+      100% { opacity: 1; } 
+    }
+    
+    .section {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: none;
+      overflow: auto;
+    }
+    
+    .active {
+      display: block;
+    }
+    
+    .smoke {
+      position: fixed;
+      width: 300%;
+      height: 300%;
+      background: 
+        radial-gradient(circle at 30% 30%, rgba(255,255,255,0.03), transparent 40%),
+        radial-gradient(circle at 70% 70%, rgba(255,255,255,0.03), transparent 40%);
+      backdrop-filter: blur(2px);
+      animation: moveSmoke 120s linear infinite;
+      z-index: 0;
+      pointer-events: none;
+    }
+    
+    @keyframes moveSmoke {
+      0% { transform: translate(0, 0) scale(1); }
+      50% { transform: translate(-50px, -50px) scale(1.05); }
+      100% { transform: translate(0, 0) scale(1); }
+    }
+    
+    .particle {
+      position: absolute;
+      width: 8px;
+      height: 8px;
+      background: radial-gradient(circle, yellow 0%, rgba(255, 255, 0, 0) 70%);
+      border-radius: 50%;
+      filter: blur(2px);
+      opacity: 0.8;
+      animation: drift 15s ease-in-out infinite alternate;
+      z-index: 1;
+      pointer-events: none;
+    }
+    
+    @keyframes drift {
+      0% { transform: translate(0, 0); }
+      50% { transform: translate(20px, -20px); }
+      100% { transform: translate(-20px, 20px); }
+    }
+    
+    .icon-wrapper {
+      position: absolute;
+      width: 50px;
+      height: 50px;
+      border: 2px solid rgba(255, 255, 255, 0.9);
+      border-radius: 50%;
+      backdrop-filter: blur(3px);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: white;
+      font-size: 22px;
+      cursor: pointer;
+      z-index: 50;
+      transition: transform 0.3s;
+    }
+    
+    .icon-wrapper:hover {
+      transform: scale(1.1);
+      box-shadow: 0 0 10px yellow, 0 0 50px yellow;
+    }
+    
+    .nav-icon {
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      z-index: 1000;
+    }
+    
+    /* Home Section Styles */
+    #home-section {
+      background: url('assets/image/home-background.png') no-repeat center center;
+      background-size: cover;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+    }
+    
+    @keyframes float {
+      0% { transform: translateY(0); }
+      50% { transform: translateY(-20px); }
+      100% { transform: translateY(0); }
+    }
+    
+    model-viewer.floating {
+      animation: float 4s ease-in-out infinite, fadeInModel 2s ease-in forwards;
+      width: 80vw;
+      height: 80vh;
+      max-width: 800px;
+      max-height: 800px;
+      z-index: 3;
+    }
+    
+    @keyframes fadeInModel { 
+      0% { opacity: 0; } 
+      100% { opacity: 1; } 
+    }
+    
+    .icon-ring {
+      position: absolute;
+      width: 550px;
+      height: 550px;
+      border-radius: 50%;
+      z-index: 4;
+      pointer-events: none;
+    }
+    
+    .icon-wrapper {
+      opacity: 0;
+      animation: fadeIn 1s forwards;
+      transform: translate(-50%, -50%);
+    }
+    
+    @keyframes fadeIn { 
+      0% { opacity: 0; } 
+      100% { opacity: 1; } 
+    }
+    
+    .icon1 { top: 0%; left: 50%; }
+    .icon2 { top: 15%; left: 85%; }
+    .icon3 { top: 50%; left: 100%; }
+    .icon4 { top: 85%; left: 85%; }
+    .icon5 { top: 100%; left: 50%; }
+    .icon6 { top: 85%; left: 15%; }
+    .icon7 { top: 50%; left: 0%; }
+    .icon8 { top: 15%; left: 15%; }
+    
+    #tooltip {
+      position: absolute;
+      background: rgba(0,0,0,0.3);
+      color: white;
+      padding: 5px 10px;
+      border-radius: 5px;
+      font-size: 14px;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.2s;
+      z-index: 999;
+    }
+    
+    .mobile-icons {
+      display: none;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 60%;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 5;
+      padding: 0 20px;
+      transition: all 0.5s ease;
+    }
+    
+    .left-icons, .right-icons {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      align-items: center;
+      transition: all 0.5s ease;
+    }
+    
+    .left-icons { margin-right: 20px; }
+    .right-icons { margin-left: 20px; }
+    
+    @keyframes iconPop {
+      0% { transform: scale(0.8); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+    
+    .mobile-icons .icon-wrapper {
+      opacity: 1;
+      animation: iconPop 0.5s ease forwards;
+      position: relative;
+      width: 50px;
+      height: 50px;
+      margin: 10px 0;
+      transition: transform 0.5s ease, margin 0.5s ease;
+    }
+    
+    .mobile-icons .icon-wrapper:nth-child(1) { animation-delay: 0s; }
+    .mobile-icons .icon-wrapper:nth-child(2) { animation-delay: 0.1s; }
+    .mobile-icons .icon-wrapper:nth-child(3) { animation-delay: 0.2s; }
+    .mobile-icons .icon-wrapper:nth-child(4) { animation-delay: 0.3s; }
+    
+    /* Contact Section Styles */
+    #contact-section {
+      background: url('assets/image/contact-background.png') no-repeat center center;
+      background-size: cover;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    
+    .contact-section {
+      width: 90%;
+      max-width: 480px;
+      padding: 40px;
+      backdrop-filter: blur(0px);
+      background: rgba(0, 0, 0, 0.25);
+      border-radius: 12px;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+      text-align: center;
+      z-index: 2;
+      opacity: 0;
+      animation: fadeInForm 4s ease-out 1s forwards;
+      box-sizing: border-box;
+    }
+    
+    @keyframes fadeInForm {
+      0% { opacity: 0; }
+      100% { opacity: 1; }
+    }
+    
+    .contact-section h2 {
+      margin-bottom: 20px;
+      font-size: 2.2em;
+    }
+    
+    .contact-form input,
+    .contact-form textarea {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 15px;
+      border: none;
+      border-radius: 6px;
+      background: rgba(255, 255, 255, 0.1);
+      color: #fff;
+      backdrop-filter: blur(2px);
+    }
+    
+    .contact-form input::placeholder,
+    .contact-form textarea::placeholder {
+      color: rgba(255, 255, 255, 0.8);
+    }
+    
+    .contact-form button {
+      padding: 12px 30px;
+      border: none;
+      border-radius: 6px;
+      background: #e3a600;
+      color: #fff;
+      font-size: 1em;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    
+    .contact-form button:hover {
+      background: #c48e00;
+    }
+    
+    /* About Section Styles */
+    #about-section {
+      background: url('assets/image/about-background.png') no-repeat center center;
+      background-size: cover;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    
+    #particles {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      z-index: 1;
+    }
+    
+    #ringContainer {
+      position: relative;
+      width: 0; 
+      height: 0;
+      z-index: 2;
+    }
+    
+    .model-wrapper {
+      position: absolute;
+      transform: translate(-50%, -50%);
+      opacity: 0;
+      animation: fadeInModels 2s forwards;
+    }
+    
+    @keyframes fadeInModels {
+      0% { opacity: 0; }
+      100% { opacity: 1; }
+    }
+    
+    .model-wrapper:nth-child(1) { animation-delay: 0.5s; }
+    .model-wrapper:nth-child(2) { animation-delay: 1s; }
+    .model-wrapper:nth-child(3) { animation-delay: 1.5s; }
+    .model-wrapper:nth-child(4) { animation-delay: 2s; }
+    .model-wrapper:nth-child(5) { animation-delay: 2.5s; }
+    .model-wrapper:nth-child(6) { animation-delay: 3s; }
+    
+    model-viewer {
+      position: absolute;
+      transform: translate(-50%, -50%);
+      pointer-events: auto;
+    }
+    
+    .book model-viewer     { width: 150px; height: 150px; }
+    .crystal model-viewer  { width: 70px; height: 100px; }
+    .power model-viewer    { width: 80px; height: 100px; }
+    .cauldron model-viewer { width: 100px; height: 100px; }
+    .staff model-viewer    { width: 100px; height: 110px; }
+    .hat model-viewer      { width: 100px; height: 120px; }
+    
+    .center-card {
+      position: absolute;
+      width: 240px;
+      padding: 20px;
+      background: rgba(255,255,255,0.15);
+      backdrop-filter: blur(12px);
+      box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+      border-radius: 15px;
+      text-align: center;
+      color: white;
+      z-index: 10;
+      opacity: 0;
+      animation: fadeIn 2s forwards;
+      animation-delay: 0.7s;
+    }
+    
+    @keyframes fadeIn {
+      0% { opacity: 0; }
+      100% { opacity: 1; }
+    }
+    
+    .center-card:hover {
+      cursor: pointer;
+      transform: scale(1.05);
+    }
+    
+    .center-card img {
+      width: 100px; 
+      height: 100px;
+      border-radius: 50%;
+      border: 2px solid rgba(255,255,255,0.6);
+      object-fit: cover;
+      margin-bottom: 12px;
+    }
+    
+    .click-prompt {
+      position: absolute;
+      bottom: 50px;
+      font-size: 16px;
+      color: white;
+      background: rgba(0, 0, 0, 0.5);
+      padding: 8px 14px;
+      border-radius: 12px;
+      backdrop-filter: blur(4px);
+      pointer-events: none;
+      opacity: 1;
+      transition: opacity 0.4s ease-in-out;
+      z-index: 20;
+    }
+    
+    .click-prompt.hidden {
+      opacity: 0;
+    }
+    
+    .tooltip {
+      position: absolute;
+      padding: 6px 10px;
+      background: rgba(0,0,0,0.8);
+      color: white;
+      font-size: 13px;
+      border-radius: 4px;
+      pointer-events: none;
+      white-space: nowrap;
+      opacity: 0;
+      transition: opacity 0.2s;
+      z-index: 30;
+    }
+    
+    /* Portfolio Section Styles */
+    #portfolio-section {
+      background: url('assets/image/projects-background.png') no-repeat center top;
+      background-size: cover;
+      background-attachment: fixed;
+    }
+    
+    .banner {
+      width: 100%;
+      height: 100vh;
+      text-align: center;
+      overflow: hidden;
+      position: relative;
+    }
+    
+    .banner .slider {
+      position: absolute;
+      width: 200px;
+      height: 250px;
+      top: 10%;
+      left: calc(50% - 100px);
+      transform-style: preserve-3d;
+      transform: perspective(1000px);
+      animation: autoRun 20s linear infinite;
+      z-index: 2;
+      animation-play-state: running;
+    }
+    
+    @keyframes autoRun {
+      from {
+        transform: perspective(1000px) rotateX(-16deg) rotateY(0deg);
+      }
+      to {
+        transform: perspective(1000px) rotateX(-16deg) rotateY(360deg);
+      }
+    }
+    
+    .banner .slider .item {
+      position: absolute;
+      inset: 0;
+      transform: rotateY(calc((var(--position) - 1) * (360deg / var(--quantity)))) translateZ(550px);
+      perspective: 1000px;
+      transition: transform 0.6s ease;
+    }
+    
+    .banner .slider .item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.6s ease;
+      backface-visibility: hidden;
+    }
+    
+    .item .back {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.7);
+      color: white;
+      font-size: 0.9em;
+      line-height: 1.4em;
+      padding: 10px;
+      text-align: center;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s, visibility 0s 0.3s;
+      overflow-wrap: break-word;
+      word-break: break-word;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      backface-visibility: hidden;
+    }
+    
+    .item:hover .back {
+      opacity: 1;
+      visibility: visible;
+    }
+    
+    .item:hover img {
+      transform: rotateY(180deg);
+    }
+    
+    .view-button {
+      position: absolute;
+      bottom: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(255, 255, 255, 0.85);
+      color: #000;
+      padding: 5px 10px;
+      font-size: 0.9em;
+      border: none;
+      border-radius: 5px;
+      opacity: 0;
+      cursor: pointer;
+      transition: opacity 0.3s;
+    }
+    
+    .item:hover .view-button {
+      opacity: 1;
+    }
+    
+    .view-button:hover {
+      background: yellow;
+    }
+    
+    .view-button::after {
+      content: "Click to view details";
+      position: absolute;
+      bottom: 120%;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #333;
+      color: white;
+      padding: 3px 8px;
+      border-radius: 3px;
+      font-size: 0.75em;
+      opacity: 0;
+      white-space: nowrap;
+      pointer-events: none;
+      transition: opacity 0.3s;
+    }
+    
+    .view-button:hover::after {
+      opacity: 1;
+    }
+    
+    .banner .content {
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: min(1400px, 100vw);
+      height: max-content;
+      padding-bottom: 100px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 1;
+    }
+    
+    .banner .content h1 {
+      font-family: 'ICA Rubrik';
+      font-size: 16em;
+      line-height: 1em;
+      color: #25283B;
+      position: relative;
+    }
+    
+    .banner .content h1::after {
+      position: absolute;
+      inset: 0;
+      content: attr(data-content);
+      z-index: 2;
+      -webkit-text-stroke: 2px #d2d2d2;
+      color: transparent;
+    }
+    
+    .banner .content .author {
+      font-family: Poppins, sans-serif;
+      text-align: right;
+      max-width: 200px;
+    }
+    
+    .banner .content h2 {
+      font-size: 3em;
+    }
+    
+    /* Project View Section */
+    #project-view-section {
+      background: #121212;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 20px;
+    }
+    
+    #project-image {
+      max-width: 100%;
+      max-height: 80vh;
+      border: 5px solid #555;
+      border-radius: 10px;
+      margin-bottom: 20px;
+    }
+    
+    .description {
+      font-size: 1.2em;
+      text-align: center;
+      margin-bottom: 30px;
+      color: #ccc;
+    }
+    
+    .back-button {
+      display: inline-block;
+      padding: 10px 20px;
+      background-color: #2196f3;
+      color: white;
+      text-decoration: none;
+      border-radius: 8px;
+      font-weight: bold;
+    }
+    
+    .back-button:hover {
+      background-color: #0b7dda;
+    }
+    
+    /* Popup Styles */
+    #popup {
+      position: fixed;
+      top: 50%; 
+      left: 50%;
+      transform: translate(-50%, -50%) scale(0);
+      width: 300px;
+      padding: 20px;
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(10px);
+      color: white;
+      border-radius: 15px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.6);
+      text-align: center;
+      transition: transform 0.3s ease, opacity 0.5s ease;
+      z-index: 100;
+      opacity: 0;
+    }
+    
+    #popup button {
+      margin-top: 15px;
+      padding: 6px 12px;
+      background: #FFE87C;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    
+    #popup.show {
+      transform: translate(-50%, -50%) scale(1);
+      opacity: 1;
+    }
+    
+    /* Responsive Styles */
+    @media (max-width: 1023px) {
+      .banner .slider {
+        width: 160px;
+        height: 200px;
+        left: calc(50% - 80px);
+      }
+      
+      .banner .slider .item {
+        transform: rotateY(calc((var(--position) - 1) * (360deg / var(--quantity)))) translateZ(300px);
+      }
+      
+      .banner .content h1 {
+        font-size: 7em;
+      }
+      
+      .item .back {
+        font-size: 0.85em;
+      }
+    }
+    
+    @media (max-width: 767.98px) {
+      #iconRing {
+        display: none !important;
+      }
+      
+      .mobile-icons {
+        display: flex;
+      }
+      
+      model-viewer.floating {
+        width: 90vw;
+        max-width: 350px;
+        max-height: 350px;
+        opacity: 1 !important;
+        visibility: visible !important;
+      }
+      
+      .banner .slider {
+        width: 100px;
+        height: 150px;
+        left: calc(50% - 50px);
+      }
+      
+      .banner .slider .item {
+        transform: rotateY(calc((var(--position) - 1) * (360deg / var(--quantity)))) translateZ(180px);
+      }
+      
+      .banner .content h1 {
+        font-size: 5em;
+      }
+      
+      .item .back {
+        font-size: 0.75em;
+      }
+      
+      .responsive-models {
+        display: flex;
+      }
+      
+      .center-card {
+        width: 220px;
+      }
+    }
+    
+    @media (max-width: 576px) {
+      .center-card {
+        width: 200px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Background Elements -->
+  <div class="smoke"></div>
+  <div id="particles"></div>
+  
+  <!-- Audio Player -->
+  <audio id="bg-music" loop>
+    <source src="assets/audio/birds39-forest-20772.mp3" type="audio/mpeg">
+  </audio>
+  
+  <!-- Navigation Icon -->
+  <div class="icon-wrapper nav-icon" onclick="showSection('home-section')">
+    <i class="fas fa-home"></i>
+  </div>
+  
+  <!-- Sections -->
+  <div id="home-section" class="section active">
+    <model-viewer src="assets/3Dmodel/wizard-transformed.glb" alt="Wizard Model"
+      camera-controls interaction-prompt="none" disable-zoom 
+      camera-orbit="0deg 90deg auto" min-camera-orbit="auto 90deg auto"
+      max-camera-orbit="auto 90deg auto" min-field-of-view="30deg"
+      max-field-of-view="30deg" class="floating">
+    </model-viewer>
+  
+    <div class="icon-ring" id="iconRing">
+      <div class="icon-wrapper icon1" onclick="showSection('home-section')"><i class="fas fa-home"></i></div>
+      <div class="icon-wrapper icon2"><a href="https://www.tiktok.com/@YourTikTokUsername" target="_blank"><i class="fab fa-tiktok"></i></a></div>
+      <div class="icon-wrapper icon3" onclick="showSection('about-section')"><i class="fas fa-user"></i></div>
+      <div class="icon-wrapper icon4" onclick="showSection('portfolio-section')"><i class="fas fa-paint-brush"></i></div>
+      <div class="icon-wrapper icon5" onclick="showSection('contact-section')"><i class="fas fa-envelope"></i></div>
+      <div class="icon-wrapper icon6"><a href="https://www.facebook.com/YourFacebookUsername" target="_blank"><i class="fab fa-facebook-f"></i></a></div>
+      <div class="icon-wrapper icon7"><a href="https://www.instagram.com/YourInstagramUsername" target="_blank"><i class="fab fa-instagram"></i></a></div>
+      <div class="icon-wrapper icon8"><a href="https://github.com/YourGithubUsername" target="_blank"><i class="fab fa-github"></i></a></div>
+    </div>
+  
+    <div class="mobile-icons d-flex">
+      <div class="left-icons">
+        <div class="icon-wrapper" onclick="showSection('home-section')"><i class="fas fa-home"></i></div>
+        <div class="icon-wrapper"><a href="https://www.tiktok.com/" target="_blank"><i class="fab fa-tiktok"></i></a></div>
+        <div class="icon-wrapper" onclick="showSection('about-section')"><i class="fas fa-user"></i></div>
+        <div class="icon-wrapper" onclick="showSection('portfolio-section')"><i class="fas fa-paint-brush"></i></div>
+      </div>
+      <div class="right-icons">
+        <div class="icon-wrapper" onclick="showSection('contact-section')"><i class="fas fa-envelope"></i></div>
+        <div class="icon-wrapper"><a href="https://www.facebook.com/" target="_blank"><i class="fab fa-facebook-f"></i></a></div>
+        <div class="icon-wrapper"><a href="https://www.instagram.com/" target="_blank"><i class="fab fa-instagram"></i></a></div>
+        <div class="icon-wrapper"><a href="https://github.com/" target="_blank"><i class="fab fa-github"></i></a></div>
+      </div>
+    </div>
+  
+    <div id="tooltip"></div>
+  </div>
+  
+  <div id="contact-section" class="section">
+    <section class="contact-section">
+      <h2>Get in Touch</h2>
+      <p>If you have any inquiries, collaboration opportunities, or would simply like to get in touch, please feel free to contact me. I am open to professional discussions and look forward to connecting with you.</p>
+  
+      <form class="contact-form" id="contactForm">
+        <input type="hidden" name="_subject" value="New message from website" />
+        <input type="text" name="name" placeholder="Your Name" required />
+        <input type="email" name="_replyto" placeholder="Your Email" required />
+        <textarea name="message" placeholder="Your Message" rows="5" required></textarea>
+        <button type="submit">Send Message</button>
+      </form>
+    </section>
+  </div>
+  
+  <div id="about-section" class="section">
+    <!-- Desktop Circular Layout -->
+    <div id="ringContainer">
+      <!-- Book Model -->
+      <div class="model-wrapper book">
+        <model-viewer 
+          src="assets/3Dmodel/Evil Book.glb"
+          camera-controls
+          disable-zoom
+          disable-pan
+          interaction-prompt="none"
+          min-camera-orbit="auto 90deg auto"
+          max-camera-orbit="auto 90deg auto"
+          data-tooltip="Storytelling & Writing">
+        </model-viewer>
+      </div>
+      
+      <!-- Crystal Model -->
+      <div class="model-wrapper crystal">
+        <model-viewer 
+          src="assets/3Dmodel/crystal/scene.gltf"
+          camera-controls
+          disable-zoom
+          disable-pan
+          interaction-prompt="none"
+          min-camera-orbit="auto 90deg auto"
+          max-camera-orbit="auto 90deg auto"
+          data-tooltip="Creative Ideas">
+        </model-viewer>
+      </div>
+      
+      <!-- Power Model -->
+      <div class="model-wrapper power">
+        <model-viewer 
+          src="assets/3Dmodel/power/scene.gltf"
+          camera-controls
+          disable-zoom
+          disable-pan
+          interaction-prompt="none"
+          min-camera-orbit="auto 90deg auto"
+          max-camera-orbit="auto 90deg auto"
+          data-tooltip="Problem Solving">
+        </model-viewer>
+      </div>
+      
+      <!-- Cauldron Model -->
+      <div class="model-wrapper cauldron">
+        <model-viewer 
+          src="assets/3Dmodel/magic_cauldron_lowpoly/scene.gltf"
+          camera-controls
+          disable-zoom
+          disable-pan
+          interaction-prompt="none"
+          min-camera-orbit="auto 90deg auto"
+          max-camera-orbit="auto 90deg auto"
+          data-tooltip="Project Management">
+        </model-viewer>
+      </div>
+      
+      <!-- Staff Model -->
+      <div class="model-wrapper staff">
+        <model-viewer 
+          src="assets/3Dmodel/staff-transformed.glb"
+          camera-controls
+          disable-zoom
+          disable-pan
+          interaction-prompt="none"
+          min-camera-orbit="auto 90deg auto"
+          max-camera-orbit="auto 90deg auto"
+          data-tooltip="Technical Skills">
+        </model-viewer>
+      </div>
+      
+      <!-- Hat Model -->
+      <div class="model-wrapper hat">
+        <model-viewer 
+          src="assets/3Dmodel/hat-transformed.glb"
+          camera-controls
+          disable-zoom
+          disable-pan
+          interaction-prompt="none"
+          min-camera-orbit="auto 90deg auto"
+          max-camera-orbit="auto 90deg auto"
+          data-tooltip="UX/UI Design">
+        </model-viewer>
+      </div>
+    </div>
+  
+    <!-- Responsive Column Layout -->
+    <div class="responsive-models">
+      <div class="left-column">
+        <model-viewer 
+          class="book-model"
+          src="assets/3Dmodel/Evil Book.glb"
+          camera-controls
+          disable-zoom
+          disable-pan
+          interaction-prompt="none"
+          data-tooltip="Storytelling & Writing">
+        </model-viewer>
+        
+        <model-viewer 
+          class="crystal-model"
+          src="assets/3Dmodel/crystal/scene.gltf"
+          camera-controls
+          disable-zoom
+          disable-pan
+          interaction-prompt="none"
+          data-tooltip="Creative Ideas">
+        </model-viewer>
+        
+        <model-viewer 
+          class="power-model"
+          src="assets/3Dmodel/power/scene.gltf"
+          camera-controls
+          disable-zoom
+          disable-pan
+          interaction-prompt="none"
+          data-tooltip="Problem Solving">
+        </model-viewer>
+      </div>
+      
+      <div class="right-column">
+        <model-viewer 
+          class="cauldron-model"
+          src="assets/3Dmodel/magic_cauldron_lowpoly/scene.gltf"
+          camera-controls
+          disable-zoom
+          disable-pan
+          interaction-prompt="none"
+          data-tooltip="Project Management">
+        </model-viewer>
+        
+        <model-viewer 
+          class="staff-model"
+          src="assets/3Dmodel/staff-transformed.glb"
+          camera-controls
+          disable-zoom
+          disable-pan
+          interaction-prompt="none"
+          data-tooltip="Technical Skills">
+        </model-viewer>
+        
+        <model-viewer 
+          class="hat-model"
+          src="assets/3Dmodel/hat-transformed.glb"
+          camera-controls
+          disable-zoom
+          disable-pan
+          interaction-prompt="none"
+          data-tooltip="UX/UI Design">
+        </model-viewer>
+      </div>
+    </div>
+  
+    <div class="center-card">
+      <img src="assets/image/IMG_20250712_103356.jpg" alt="Hans Kurvey C Filart" class="profile-image">
+      <p style="font-size: 18px; font-weight: bold;">Hans Kurvey C <span style="color: #ffe055;">Filart</span></p>
+      <p>Web Developer <br> & <br> Designer</p>
+    </div>
+  
+    <div class="click-prompt">✨ Click an object to know more about me!</div>
+    <div class="tooltip"></div>
+  
+    <!-- Popup -->
+    <div id="popup">
+      <h2 id="popupTitle"></h2>
+      <p id="popupContent" style="font-size: 14px; opacity: 0.9;"></p>
+      <button onclick="closePopup()">Close</button>
+    </div>
+  </div>
+  
+  <div id="portfolio-section" class="section">
+    <div class="banner">
+      <div class="slider" style="--quantity: 10">
+        <div class="item" style="--position: 1">
+          <img src="assets/image/payroll.jpg" alt="Payroll System">
+          <div class="back">Payroll system UI: login, records, payslips</div>
+          <button class="view-button" onclick="viewProject('assets/image/payroll.jpg', 'Payroll system UI: login, records, payslips')">View</button>
+        </div>
+        <div class="item" style="--position: 2">
+          <img src="assets/image/deliverables.jpg" alt="Deliverables System">
+          <div class="back">Deliverables tracking system: upload, status, history</div>
+          <button class="view-button" onclick="viewProject('assets/image/deliverables.jpg', 'Deliverables tracking system: upload, status, history')">View</button>
+        </div>
+        <div class="item" style="--position: 3">
+          <img src="assets/image/login.jpg" alt="Login Form">
+          <div class="back">Login form UI: user authentication interface</div>
+          <button class="view-button" onclick="viewProject('assets/image/login.jpg', 'Login form UI: user authentication interface')">View</button>
+        </div>
+        <div class="item" style="--position: 4">
+          <img src="assets/image/IMG_20250712_103356.jpg" alt="Godot Game">
+          <div class="back">Godot game UI: start, pause, score screens</div>
+          <button class="view-button" onclick="viewProject('assets/image/IMG_20250712_103356.jpg', 'Godot game UI: start, pause, score screens')">View</button>
+        </div>
+        <div class="item" style="--position: 5">
+          <img src="assets/image/website.jpg" alt="Website UI">
+          <div class="back">Website UI design: responsive homepage, navigation</div>
+          <button class="view-button" onclick="viewProject('assets/image/website.jpg', 'Website UI design: responsive homepage, navigation')">View</button>
+        </div>
+        <div class="item" style="--position: 6">
+          <img src="assets/image/arduino.jpg" alt="Arduino Project">
+          <div class="back">Arduino project UI: sensor readout dashboard</div>
+          <button class="view-button" onclick="viewProject('assets/image/arduino.jpg', 'Arduino project UI: sensor readout dashboard')">View</button>
+        </div>
+        <div class="item" style="--position: 7">
+          <img src="assets/image/menu.jpg" alt="Menu UI">
+          <div class="back">Menu UI: interactive navigation for app prototype</div>
+          <button class="view-button" onclick="viewProject('assets/image/menu.jpg', 'Menu UI: interactive navigation for app prototype')">View</button>
+        </div>
+        <div class="item" style="--position: 8">
+          <img src="assets/image/POS.jpg" alt="POS System">
+          <div class="back">POS system UI: cashier interface, product lookup</div>
+          <button class="view-button" onclick="viewProject('assets/image/POS.jpg', 'POS system UI: cashier interface, product lookup')">View</button>
+        </div>
+        <div class="item" style="--position: 9">
+          <img src="assets/image/port.jpg" alt="Graphic Design 1">
+          <div class="back">Graphic design: poster “Tech Expo” – branding work</div>
+          <button class="view-button" onclick="viewProject('assets/image/port.jpg', 'Graphic design: poster “Tech Expo” – branding work')">View</button>
+        </div>
+        <div class="item" style="--position: 10">
+          <img src="assets/image/Portfolio.png" alt="Graphic Design 2">
+          <div class="back">Graphic design: brochure layout – university club</div>
+          <button class="view-button" onclick="viewProject('assets/image/Portfolio.png', 'Graphic design: brochure layout – university club')">View</button>
+        </div>
+      </div>
+    
+      <div class="content">
+        <h1 data-content="HANS FILART"></h1>
+        <div class="author">
+          <h2 style="color: white;">Hans Filart</h2>
+          <p style="color: white;"><b>Web Design</b></p>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <div id="project-view-section" class="section">
+    <img id="project-image" src="" alt="Project Image">
+    <div class="description" id="project-desc">Loading...</div>
+    <a class="back-button" onclick="showSection('portfolio-section')">← return</a>
+  </div>
+
+  <script>
+    // Initialize particles
+    function createParticles() {
+      for (let i = 0; i < 50; i++) {
+        const particle = document.createElement('div');
+        particle.classList.add('particle');
+        particle.style.left = Math.random() * 100 + 'vw';
+        particle.style.top = Math.random() * 100 + 'vh';
+        particle.style.animationDuration = (Math.random() * 10 + 10) + 's';
+        document.body.appendChild(particle);
+      }
+    }
+    
+    // Initialize audio
+    function setupAudio() {
+      const audio = document.getElementById('bg-music');
+      document.addEventListener('click', function playMusicOnce() {
+        audio.play().catch(e => console.log('Autoplay blocked:', e));
+        document.removeEventListener('click', playMusicOnce);
+      });
+    }
+    
+    // Section navigation
+    function showSection(sectionId) {
+      // Hide all sections
+      document.querySelectorAll('.section').forEach(section => {
+        section.classList.remove('active');
+      });
+      
+      // Show selected section
+      document.getElementById(sectionId).classList.add('active');
+      
+      // Restart animations when showing home section
+      if (sectionId === 'home-section') {
+        document.querySelector('.floating').style.animation = 'none';
+        setTimeout(() => {
+          document.querySelector('.floating').style.animation = 'float 4s ease-in-out infinite, fadeInModel 2s ease-in forwards';
+        }, 10);
+      }
+    }
+    
+    // Icon ring rotation
+    function setupIconRing() {
+      const iconRing = document.getElementById('iconRing');
+      if (!iconRing) return;
+      
+      const icons = iconRing.querySelectorAll('.icon-wrapper');
+      let angle = -10;
+      let paused = false;
+    
+      function rotateRing() {
+        if (!paused) angle += 0.1;
+        iconRing.style.transform = `rotate(${angle}deg)`;
+        icons.forEach(icon => {
+          icon.style.transform = `translate(-50%, -50%) rotate(${-angle}deg)`;
+        });
+        requestAnimationFrame(rotateRing);
+      }
+      
+      rotateRing();
+    
+      icons.forEach(wrapper => {
+        wrapper.addEventListener('mouseenter', () => paused = true);
+        wrapper.addEventListener('mouseleave', () => paused = false);
+      });
+    
+      const tooltip = document.getElementById('tooltip');
+      icons.forEach(icon => {
+        icon.addEventListener('mouseenter', () => {
+          let text = '';
+          const iconClass = icon.querySelector('i').classList;
+          if (iconClass.contains('fa-home')) text = 'Home';
+          else if (iconClass.contains('fa-tiktok')) text = 'TikTok';
+          else if (iconClass.contains('fa-user')) text = 'About';
+          else if (iconClass.contains('fa-paint-brush')) text = 'Portfolio';
+          else if (iconClass.contains('fa-envelope')) text = 'Contact';
+          else if (iconClass.contains('fa-facebook-f')) text = 'Facebook';
+          else if (iconClass.contains('fa-instagram')) text = 'Instagram';
+          else if (iconClass.contains('fa-github')) text = 'GitHub';
+          tooltip.innerText = text;
+          tooltip.style.opacity = 1;
+        });
+    
+        icon.addEventListener('mousemove', e => {
+          tooltip.style.left = e.pageX + 15 + 'px';
+          tooltip.style.top = e.pageY + 15 + 'px';
+        });
+    
+        icon.addEventListener('mouseleave', () => {
+          tooltip.style.opacity = 0;
+        });
+      });
+    }
+    
+    // Portfolio carousel
+    function setupPortfolio() {
+      const images = document.querySelectorAll(".slider .item");
+    
+      images.forEach(img => {
+        img.addEventListener("mouseenter", () => {
+          const slider = img.closest(".slider");
+          slider.style.animationPlayState = "paused";
+        });
+    
+        img.addEventListener("mouseleave", () => {
+          const slider = img.closest(".slider");
+          slider.style.animationPlayState = "running";
+        });
+      });
+    }
+    
+    // About section models
+    function setupAboutSection() {
+      const ring = document.getElementById('ringContainer');
+      if (!ring) return;
+      
+      const prompt = document.querySelector('.click-prompt');
+      const tooltip = document.querySelector('.tooltip');
+    
+      const popupInfo = { 
+        "book": "Hi, I'm Hans Filart! I love sharing my journey a story filled with passion for coding, design, and creativity.",
+        "crystal": "My dreams are clear like a crystal I aspire to build creative projects that inspire and innovate.",
+        "power": "I excel in problem-solving, leading projects, and pushing boundaries with creative solutions.",
+        "cauldron": "Project management is where I blend ideas, skills, and teamwork to brew successful results.",
+        "staff": "I wield skills in Java, JavaScript, PHP, HTML, CSS, and UI/UX design my staff of tech tools.",
+        "hat": "I adapt and wear many hats always learning, exploring, and growing as a developer and creator."
+      };
+    
+      const wrappers = Array.from(document.querySelectorAll('.model-wrapper'));
+      const radius = 300;
+      let angle = 0, paused = false;
+    
+      // Initialize all model viewers with event listeners
+      document.querySelectorAll('model-viewer').forEach(v => {
+        let isDragging = false;
+    
+        v.addEventListener('mousedown', () => isDragging = true);
+        v.addEventListener('touchstart', () => isDragging = true);
+        v.addEventListener('mouseup', () => isDragging = false);
+        v.addEventListener('touchend', () => isDragging = false);
+    
+        v.addEventListener('click', () => {
+          if (!isDragging) {
+            if (prompt) prompt.classList.add('hidden');
+            const tooltipText = v.getAttribute('data-tooltip') || v.parentElement.getAttribute('data-tooltip');
+            let modelClass = '';
+            
+            if (v.parentElement.classList.contains('model-wrapper')) {
+              modelClass = v.parentElement.classList[1];
+            } else if (v.classList.contains('book-model')) {
+              modelClass = 'book';
+            } else if (v.classList.contains('crystal-model')) {
+              modelClass = 'crystal';
+            } else if (v.classList.contains('power-model')) {
+              modelClass = 'power';
+            } else if (v.classList.contains('cauldron-model')) {
+              modelClass = 'cauldron';
+            } else if (v.classList.contains('staff-model')) {
+              modelClass = 'staff';
+            } else if (v.classList.contains('hat-model')) {
+              modelClass = 'hat';
+            }
+            
+            showPopup(tooltipText, popupInfo[modelClass]);
+          }
+        });
+    
+        v.addEventListener('mouseenter', () => paused = true);
+        v.addEventListener('mouseleave', () => paused = false);
+    
+        v.addEventListener('mouseenter', (e) => {
+          const tooltipText = v.getAttribute('data-tooltip');
+          if (tooltip) tooltip.textContent = tooltipText;
+          if (tooltip) tooltip.style.opacity = 1;
+        });
+        
+        v.addEventListener('mousemove', e => {
+          if (tooltip) {
+            tooltip.style.left = e.pageX + 12 + 'px';
+            tooltip.style.top = e.pageY + 12 + 'px';
+          }
+        });
+        
+        v.addEventListener('mouseleave', () => {
+          if (tooltip) tooltip.style.opacity = 0;
+        });
+      });
+    
+      // Animate the orbiting models (desktop only)
+      function loop() {
+        if (!paused && window.innerWidth > 992) angle += 0.003;
+        wrappers.forEach((w, i) => {
+          const theta = i * (2 * Math.PI / wrappers.length) + angle;
+          w.style.left = `${Math.cos(theta) * radius}px`;
+          w.style.top  = `${Math.sin(theta) * radius}px`;
+          w.style.transform = `translate(-50%,-50%)`;
+        });
+        requestAnimationFrame(loop);
+      }
+      
+      if (wrappers.length > 0) {
+        loop();
+      }
+    
+      // Handle window resize
+      window.addEventListener('resize', function() {
+        if (window.innerWidth <= 992) {
+          if (ring) ring.style.display = 'none';
+          document.querySelector('.responsive-models').style.display = 'flex';
+        } else {
+          if (ring) ring.style.display = 'block';
+          document.querySelector('.responsive-models').style.display = 'none';
+        }
+      });
+    }
+    
+    // Popup Functions
+    function showPopup(title, content) {
+      const popup = document.getElementById('popup');
+      const popupTitle = document.getElementById('popupTitle');
+      const popupContent = document.getElementById('popupContent');
+      
+      popupTitle.textContent = title;
+      popupContent.textContent = content;
+      popup.classList.add('show');
+    }
+    
+    function closePopup() {
+      document.getElementById('popup').classList.remove('show');
+    }
+    
+    // Contact form handling
+    function setupContactForm() {
+      document.getElementById('contactForm').addEventListener('submit', e => {
+        e.preventDefault();
+        setTimeout(() => alert('🎉 Message sent! I’ll reply soon.'), 500);
+        // Reset form
+        e.target.reset();
+      });
+    }
+    
+    // Project viewer
+    function viewProject(imgSrc, desc) {
+      document.getElementById('project-image').src = imgSrc;
+      document.getElementById('project-desc').textContent = desc;
+      showSection('project-view-section');
+    }
+    
+    // Initialize everything when DOM is loaded
+    document.addEventListener('DOMContentLoaded', () => {
+      createParticles();
+      setupAudio();
+      setupIconRing();
+      setupPortfolio();
+      setupAboutSection();
+      setupContactForm();
+      
+      // Show home section by default
+      showSection('home-section');
+    });
+  </script>
+</body>
+</html>
